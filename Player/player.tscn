@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyq7j6qwudlfn"]
+
+[ext_resource type="Texture2D" uid="uid://cfp54850lfvmm" path="res://Assets/astronaut.png" id="1_gkish"]
+[ext_resource type="Script" path="res://Components/move_input_component.gd" id="2_d2t40"]
+[ext_resource type="Script" path="res://Components/move_component.gd" id="3_d2nmi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j11u2"]
+atlas = ExtResource("1_gkish")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lroum"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j11u2")
+}],
+"loop": true,
+"name": &"Default",
+"speed": 5.0
+}]
+
+[node name="Player" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_lroum")
+animation = &"Default"
+
+[node name="MoveInputComponent" type="Node" parent="."]
+script = ExtResource("2_d2t40")
+
+[node name="MoveComponent" type="Node" parent="." node_paths=PackedStringArray("move_input_component", "player")]
+script = ExtResource("3_d2nmi")
+move_input_component = NodePath("../MoveInputComponent")
+player = NodePath("..")
+
+[node name="Accelerate_Decelerate" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="timeout" from="Accelerate_Decelerate" to="MoveComponent" method="_on_accelerate_decelerate_timeout"]
